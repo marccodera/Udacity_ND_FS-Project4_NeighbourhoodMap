@@ -13,6 +13,16 @@ section {
     padding: 0;
 }
 
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+    padding: 10px;
+}
+
 .sidenav {
     height: 100%;
     width: 270px;

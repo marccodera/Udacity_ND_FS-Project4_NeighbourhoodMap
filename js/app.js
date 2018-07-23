@@ -1,11 +1,11 @@
 /** Model **/
 var initialLocations = [
-        {title: "Minyons de Terrassa",category : "Local Culture",location : {lat : 41.564611,lng : 2.012825}, address: "Carrer del Teatre, 4-6, 08221 Terrassa, Barcelona"},
-        {title: "FGC Estació del Nord", category : "Transport", location: {lat: 41.570202, lng: 2.015314}, address: "Passeig del Vint-i-dos de Juliol, 08226 Terrassa, Barcelona"},
-        {title: "FGC Universitat", category : "Transport", location: {lat: 41.563361, lng: 2.018970}, address: "Avinguda de Jacquard, 40, 08222 Terrassa, Barcelona"},
-        {title: "FGC Rambla", category : "Transport", location: {lat: 41.560281, lng: 2.007793}, address: "Rambla d'Ègara, 128, 08221 Terrassa, Barcelona"},
-        {title: "RENFE Estació del Nord", category : "Transport", location: {lat: 41.569748, lng: 2.014265}, address: "Plaça Estació del Nord, 08221 Terrassa, Barcelona"},
-        {title: "Esclat Supermarket", category : "Supermarket", location: {lat: 41.570042, lng: 2.004469}, address: "Avinguda de Josep Tarradellas, 2, 08225 Terrassa, Barcelona"}
+        {title: "Minyons de Terrassa",category : "Local Culture",location : {lat : 41.564611,lng : 2.012825}, address: "Carrer del Teatre, 4-6, 08221 Terrassa, Barcelona", IgLocationId: 7857882},
+        {title: "Biblioteca Central", category : "Library", location: {lat: 41.569068, lng: 2.009941}, address: "Passeig de les Lletres, 1, 08221 Tarrasa, Barcelona", IgLocationId: 279763804},
+        {title: "Hospital Mutua de Terrassa", category : "Hospital", location: {lat: 41.564225, lng: 2.0143027}, address: "Plaça del Doctor Robert, 5, 08221 Terrassa, Barcelona", IgLocationId: 1692770984311166},
+        {title: "MNACTec", category : "Museum", location: {lat: 41.565395, lng: 2.007131}, address: "Rambla d'Ègara, 270, 08221 Terrassa, Barcelona", IgLocationId: 769808843179516},
+        {title: "RENFE Estació del Nord", category : "Transport", location: {lat: 41.569748, lng: 2.014265}, address: "Plaça Estació del Nord, 08221 Terrassa, Barcelona", IgLocationId: 239465053074271},
+        {title: "Anytime Fitness", category : "Gym", location: {lat: 41.570042, lng: 2.004469}, address: "Avinguda de Josep Tarradellas, 2, 08225 Terrassa, Barcelona", IgLocationId: 1024420731}
 ]
 
 var Location = function(data) {
@@ -25,6 +25,8 @@ var ViewModel = function() {
     initialLocations.forEach(function(locationItem) {
         self.locationList.push( new Location(locationItem) );
     });
+
+    
 }
 
 /** API interaction **/
@@ -50,6 +52,8 @@ function initMap() {
 
     // Creating a Marker for each location in the model
     for(var i = 0; i < initialLocations.length; i++) {
+        // Instagram API Key: 9e7d6563f18a495ab49a6b8b5d255069
+        // instagram GET URL: https://api.instagram.com/v1/locations/initialLocations[i].IgLocationId?access_token=9e7d6563f18a495ab49a6b8b5d255069
         var marker = new google.maps.Marker({
             id: i,
             address: initialLocations[i].address,
@@ -80,7 +84,7 @@ function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
-        infowindow.setContent('<h3>' + marker.title + '</h3>' + '<div>' + marker.address + '</div>');
+        infowindow.setContent('<h3>' + marker.title + '</h3>'+ '<div>' + marker.category + '</div>' + '<div>' + marker.address + '</div>');
         infowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
         infowindow.addListener('closeclick', function() {
