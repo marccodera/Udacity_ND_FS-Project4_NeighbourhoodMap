@@ -14,11 +14,22 @@
             <section class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <h1>Terrassa Neighbourhood Map</h1>
-                        
-                        <ul data-bind="foreach: locationList">
-                            <li data-bind="text: title"></li>
-                        </ul>
+                        <div>
+                            <h1>Terrassa Neighbourhood Map</h1>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="dropbtn">Categories</button>
+                            <div class="dropdown-content" data-bind="foreach: categoriesList">
+                                <a href="#" data-bind="text: title"></a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <ul data-bind="foreach: locationList">
+                                <li data-bind="text: title"></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>

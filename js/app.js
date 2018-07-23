@@ -1,32 +1,67 @@
 /** Model **/
 var initialLocations = [
-        {title: "Minyons de Terrassa",category : "Local Culture",location : {lat : 41.564611,lng : 2.012825}, address: "Carrer del Teatre, 4-6, 08221 Terrassa, Barcelona", IgLocationId: 7857882},
-        {title: "Biblioteca Central", category : "Library", location: {lat: 41.569068, lng: 2.009941}, address: "Passeig de les Lletres, 1, 08221 Tarrasa, Barcelona", IgLocationId: 279763804},
-        {title: "Hospital Mutua de Terrassa", category : "Hospital", location: {lat: 41.564225, lng: 2.0143027}, address: "Plaça del Doctor Robert, 5, 08221 Terrassa, Barcelona", IgLocationId: 1692770984311166},
-        {title: "MNACTec", category : "Museum", location: {lat: 41.565395, lng: 2.007131}, address: "Rambla d'Ègara, 270, 08221 Terrassa, Barcelona", IgLocationId: 769808843179516},
-        {title: "RENFE Estació del Nord", category : "Transport", location: {lat: 41.569748, lng: 2.014265}, address: "Plaça Estació del Nord, 08221 Terrassa, Barcelona", IgLocationId: 239465053074271},
-        {title: "Anytime Fitness", category : "Gym", location: {lat: 41.570042, lng: 2.004469}, address: "Avinguda de Josep Tarradellas, 2, 08225 Terrassa, Barcelona", IgLocationId: 1024420731}
+    {title: "Minyons de Terrassa", category: "Local Culture", location: {lat : 41.564611,lng : 2.012825}, address: "Carrer del Teatre, 4-6, 08221 Terrassa, Barcelona", IgLocationId: 7857882},
+    {title: "Biblioteca Central", category: "Library", location: {lat: 41.569068, lng: 2.009941}, address: "Passeig de les Lletres, 1, 08221 Terrassa, Barcelona", IgLocationId: 279763804},
+    {title: "Hospital Mutua de Terrassa", category: "Hospital", location: {lat: 41.564225, lng: 2.0143027}, address: "Plaça del Doctor Robert, 5, 08221 Terrassa, Barcelona", IgLocationId: 1692770984311166},
+    {title: "MNACTec", category: "Museum", location: {lat: 41.565395, lng: 2.007131}, address: "Rambla d'Ègara, 270, 08221 Terrassa, Barcelona", IgLocationId: 769808843179516},
+    {title: "RENFE Estació del Nord", category: "Transport", location: {lat: 41.569748, lng: 2.014265}, address: "Plaça Estació del Nord, 08221 Terrassa, Barcelona", IgLocationId: 239465053074271},
+    {title: "Anytime Fitness", category: "Gym", location: {lat: 41.570042, lng: 2.004469}, address: "Avinguda de Josep Tarradellas, 2, 08225 Terrassa, Barcelona", IgLocationId: 1024420731},
+    {title: "Qsport", category: "Gym", location: {lat: 41.5688617, lng: 2.0067464}, address: "Carrer de Sant Gaietà, 107, 08221 Terrassa, Barcelona", IgLocationId: 468202}
 ]
+
+var initialCategories = [
+    {id: 1, title: "Local Culture"},
+    {id: 2, title: "Library"},
+    {id: 3, title: "Hospital"},
+    {id: 4, title: "Museum"},
+    {id: 5, title: "Transport"},
+    {id: 6, title: "Gym"},
+]
+
 
 var Location = function(data) {
     this.title = data.title;
+    this.category = data.category;
     this.lat = data.location.lat;
     this.lng = data.location.lng;
     this.address = data.address;
     this.marker = data.location.marker;
 }
 
+
+var Category = function(data) {
+    this.id = data.id;
+    this.title = data.title;
+}
+
+
 /** ViewModel **/
 var ViewModel = function() {
     var self = this;
 
+    //initialize location listing
     this.locationList = ko.observableArray([]);
 
+    //populating location listing with data from the model
     initialLocations.forEach(function(locationItem) {
         self.locationList.push( new Location(locationItem) );
     });
 
-    
+    //initialize categories listing
+    this.categoriesList = ko.observableArray([]);
+
+    //populating categories listing with data from the model
+    initialCategories.forEach(function(categoryItem) {
+        self.categoriesList.push( new Category(categoryItem) );
+    });
+
+    this.currentMarker = ko.observable( this.locationList() );
+
+    this.setMarker = function(clickedMarker) {
+        hideListings();
+        self.currentMarker(clickedMarker);
+    }
+
 }
 
 /** API interaction **/
