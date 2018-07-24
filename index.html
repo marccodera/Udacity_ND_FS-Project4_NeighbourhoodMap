@@ -21,7 +21,7 @@
                         <div class="dropdown">
                             <button class="dropbtn">Categories</button>
                             <div class="dropdown-content" data-bind="foreach: categoriesList">
-                                <a href="#" data-bind="text: title"></a>
+                                <a href="#" data-bind="text: title, click: $parent.setLocationList"></a>
                             </div>
                         </div>
 

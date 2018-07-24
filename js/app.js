@@ -26,6 +26,7 @@ var Location = function(data) {
     this.lng = data.location.lng;
     this.address = data.address;
     this.marker = data.location.marker;
+    this.IgLocationId = data.IgLocationId;
 }
 
 
@@ -39,27 +40,44 @@ var Category = function(data) {
 var ViewModel = function() {
     var self = this;
 
-    //initialize location listing
+    // initialize location listing
     this.locationList = ko.observableArray([]);
 
-    //populating location listing with data from the model
+    // populating location listing with data from the model
     initialLocations.forEach(function(locationItem) {
         self.locationList.push( new Location(locationItem) );
     });
 
-    //initialize categories listing
+    // initialize categories listing
     this.categoriesList = ko.observableArray([]);
 
-    //populating categories listing with data from the model
+    // populating categories listing with data from the model
     initialCategories.forEach(function(categoryItem) {
         self.categoriesList.push( new Category(categoryItem) );
     });
 
-    this.currentMarker = ko.observable( this.locationList() );
-
-    this.setMarker = function(clickedMarker) {
+    // Setting a location List based on the category clicked on the DOM
+    this.setLocationList = function(clickedLocation) {
+        // Removing all the markers from the map
         hideListings();
-        self.currentMarker(clickedMarker);
+        
+        // Removing all the elements from the location List so it can be populated again by the ones that have the same category as clicked
+        self.locationList.removeAll();
+
+        // Creating a marker array to show the markers again calling the show listings function
+        markerList = [];
+        
+        // Populating again the locationList
+        initialLocations.forEach(function(locationItem) {
+            if (locationItem.category == clickedLocation.title) {
+                self.locationList.push( new Location(locationItem) );
+                markerList.push(locationItem);
+            }
+        });
+
+        // Showing Markers again
+        showListings(markerList);
+
     }
 
 }
@@ -88,7 +106,9 @@ function initMap() {
     // Creating a Marker for each location in the model
     for(var i = 0; i < initialLocations.length; i++) {
         // Instagram API Key: 9e7d6563f18a495ab49a6b8b5d255069
-        // instagram GET URL: https://api.instagram.com/v1/locations/initialLocations[i].IgLocationId?access_token=9e7d6563f18a495ab49a6b8b5d255069
+        // instagram GET URL: https://api.instagram.com/v1/locations/7857882?access_token=9e7d6563f18a495ab49a6b8b5d255069
+
+        // Creating marker with information from the model and from the instagram API
         var marker = new google.maps.Marker({
             id: i,
             address: initialLocations[i].address,
@@ -129,14 +149,12 @@ function populateInfoWindow(marker, infowindow) {
 }
 
 // This function will loop through the markers array and display them all.
-function showListings() {
-    var bounds = new google.maps.LatLngBounds();
-    // Extend the boundaries of the map for each marker and display the marker
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-        bounds.extend(markers[i].position);
+function showListings(markerList) {
+    // Showing again all the markers provided
+    for (var i = 0; i < markerList.length; i++) {
+        // The index of the markerList is the index on the markers array, and it can be showed again by setting the map
+        markers[markerList[i].index].setMap(map);
     }
-    map.fitBounds(bounds);
 }
 
 // This function will loop through the listings and hide them all.
