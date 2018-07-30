@@ -186,8 +186,12 @@ function initMap() {
             //url: "https://api.foursquare.com/v2/venues/search?ll=" + initialLocations[i].location.lat + "," + initialLocations[i].location.long + "&near=Terrassa, Barcelona&client_id=F0MVBVM3VWYUUU1E2I1NHV2C4JXPSD5Y3ALTR2FFVTK04O2B&client_secret=VGBYLZYS12FN5UQ0JGIJKFDYSI14QDZ3I5B5F2CTHCYDAA2O&v=20180205&query=pizza",
             dataType: "jsonp",
             success: (function(i, data){
-                initialLocations[i].description = "<img src=" + data.response.venue.bestPhoto.prefix + "200x200" + data.response.venue.bestPhoto.suffix + ">";
-                //initialLocations[i].description = data.response.venues.name;
+                try {
+                    initialLocations[i].description = "<img src=" + data.response.venue.bestPhoto.prefix + "200x200" + data.response.venue.bestPhoto.suffix + ">";
+                }
+                catch(err) {
+                    initialLocations[i].description = "<div class='alert alert-danger'> Error: Could not load Foursquare picture, <p> this could be caused because of the limit <p> set for daily photo requess is to 50 for <p> free API requests accounts. </div>";
+                }
 
                 // Creating marker with information from the model and from the instagram API
                 var marker = new google.maps.Marker({
