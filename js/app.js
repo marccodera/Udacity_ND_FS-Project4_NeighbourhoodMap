@@ -201,16 +201,15 @@ function initMap() {
                     category: initialLocations[i].category,
                     title: initialLocations[i].title,
                     description: initialLocations[i].description,
-                    index: i,
                     map: map,
                     animation: google.maps.Animation.DROP
                 });
 
                 // Push the created marker to the markers array
-                markers.push(marker);
+                //markers.push(marker);
 
-                // Adding marker as a property inside each location in the model
-                initialLocations[i].index = i;
+                // Push the created marker to the markers array and add marker's index as a property inside each location in the model
+                initialLocations[i].index = markers.push(marker) -1;
 
                 // Create an onClick event for each marker
                 marker.addListener('click', function() {
