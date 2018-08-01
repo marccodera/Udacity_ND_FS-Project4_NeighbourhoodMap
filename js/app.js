@@ -7,7 +7,7 @@ var initialLocations = [
     {title: "RENFE Estació del Nord", category: "Transport", location: {lat: 41.569748, lng: 2.014265}, address: "Plaça Estació del Nord, 08221 Terrassa, Barcelona", FSVenueId: "4b6bcd3cf964a520fc182ce3"},
     {title: "Anytime Fitness", category: "Gym", location: {lat: 41.570042, lng: 2.004469}, address: "Avinguda de Josep Tarradellas, 2, 08225 Terrassa, Barcelona", FSVenueId: "568edd57498ee9de014b6a1b"},
     {title: "Qsport", category: "Gym", location: {lat: 41.5688617, lng: 2.0067464}, address: "Carrer de Sant Gaietà, 107, 08221 Terrassa, Barcelona", FSVenueId: "4bb2357a715eef3bf0e984bb"}
-]
+];
 
 var initialCategories = [
     {id: 1, title: "Local Culture"},
@@ -15,7 +15,7 @@ var initialCategories = [
     {id: 3, title: "Museum"},
     {id: 4, title: "Transport"},
     {id: 5, title: "Gym"}
-]
+];
 
 
 var Location = function(data) {
@@ -26,13 +26,13 @@ var Location = function(data) {
     this.address = data.address;
     this.marker = data.location.marker;
     this.FSVenueId = data.FSVenueId;
-}
+};
 
 
 var Category = function(data) {
     this.id = data.id;
     this.title = data.title;
-}
+};
 
 
 /** ViewModel **/
@@ -64,7 +64,7 @@ var ViewModel = function() {
         self.locationList.removeAll();
 
         // Creating a marker array to show the markers again calling the show listings function
-        markerList = [];
+        var markerList = [];
         
         // Populating again the locationList
         initialLocations.forEach(function(locationItem) {
@@ -76,10 +76,8 @@ var ViewModel = function() {
 
         // Showing Markers again
         showListings(markerList);
-
-    }
-
-}
+    };
+};
 
 /** API interaction **/
 /* Initialize the map variables */
@@ -190,7 +188,7 @@ function initMap() {
                     initialLocations[i].description = "<img src=" + data.response.venue.bestPhoto.prefix + "200x200" + data.response.venue.bestPhoto.suffix + ">";
                 }
                 catch(err) {
-                    initialLocations[i].description = "<div class='alert alert-danger'> Error: Could not load Foursquare picture, <p> this could be caused because of the limit <p> set for daily photo requess is to 50 for <p> free API requests accounts. </div>";
+                    initialLocations[i].description = "<div class='alert alert-danger'> Error: Could not load Foursquare picture. <p> Daily limit photo requess reached. </div>";
                 }
 
                 // Creating marker with information from the model and from the instagram API
@@ -251,6 +249,12 @@ function hideListings() {
         markers[i].setMap(null);
     }
 }
+
+/* Don't know how to habdle the toggle menu, I did it on the classical way outside of Knockout */
+$("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+});
 
 /** View **/
 ko.applyBindings(new ViewModel());
