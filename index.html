@@ -39,7 +39,7 @@
                 </li>
                 <li>
                     <ul data-bind="foreach: locationList">
-                        <li class="sidebar-brand"><a href="#" data-bind="text: title"></a></li>
+                        <li class="sidebar-brand"><a href="#" data-bind="text: title, click: $parent.openSelectedInfoWindow"></a></li>
                     </ul>
                 </li>
             </ul>

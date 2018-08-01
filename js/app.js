@@ -10,6 +10,7 @@ var initialLocations = [
 ];
 
 var initialCategories = [
+    {id: 0, title: "All"},
     {id: 1, title: "Local Culture"},
     {id: 2, title: "Library"},
     {id: 3, title: "Museum"},
@@ -68,7 +69,10 @@ var ViewModel = function() {
         
         // Populating again the locationList
         initialLocations.forEach(function(locationItem) {
-            if (locationItem.category == clickedLocation.title) {
+            if (clickedLocation.title == "All"){
+                self.locationList.push( new Location(locationItem) );
+                markerList.push(locationItem);
+            }else if (locationItem.category == clickedLocation.title) {
                 self.locationList.push( new Location(locationItem) );
                 markerList.push(locationItem);
             }
@@ -77,6 +81,10 @@ var ViewModel = function() {
         // Showing Markers again
         showListings(markerList);
     };
+
+    this.openSelectedInfoWindow = function(clickedLocation) {
+        openInfoWindow(clickedLocation.title);
+    }
 };
 
 /** API interaction **/
@@ -200,14 +208,13 @@ function initMap() {
                     title: initialLocations[i].title,
                     description: initialLocations[i].description,
                     map: map,
+                    infowindow: infoWindow,
                     animation: google.maps.Animation.DROP
                 });
 
-                // Push the created marker to the markers array
-                //markers.push(marker);
-
                 // Push the created marker to the markers array and add marker's index as a property inside each location in the model
-                initialLocations[i].index = markers.push(marker) -1;
+                initialLocations[i].index = markers.push(marker) - 1;
+
 
                 // Create an onClick event for each marker
                 marker.addListener('click', function() {
@@ -224,6 +231,7 @@ function initMap() {
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
+        console.log(infowindow.marker);
         infowindow.marker = marker;
         infowindow.setContent('<h3>' + marker.title + '</h3>'+ '<div>' + marker.category + '</div>' + '<div>' + marker.address + '</div>' + marker.description);
         infowindow.open(map, marker);
@@ -231,6 +239,16 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
         });
+    }
+}
+
+/* This function is showing the infowindow related to the selected marker provided by the ViewModel*/
+function openInfoWindow(markerName) {
+    for (var i =0; i < markers.length; i++) {
+        if (markers[i].title == markerName){
+            var selectedMarker = markers[i];
+            populateInfoWindow(selectedMarker, selectedMarker.infowindow);
+        }
     }
 }
 
