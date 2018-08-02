@@ -22,3 +22,7 @@ Contact
 For information, bugs, feature requests, submit patches or other things related to this application:
 * e-mail: marc.codera@gmail.com
 * e-mail subject: [Udacity_ND_FS-Project4_NeighbourhoodMap]YourSubject
+
+## Other code used - Attribution
+
+It's been used code from the [Start Bootstrap](https://startbootstrap.com/template-overviews/simple-sidebar/) page for the sidebar functionality.
