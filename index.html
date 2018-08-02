@@ -21,6 +21,7 @@
 
 <body>
 
+    <!-- wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
@@ -32,12 +33,15 @@
                     </h3>
                 </li>
                 <li>
+                    <!-- Toggle dropdown menu button for categories -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categories Filter <span class="caret"></span></a>
+                    <!-- Building the view for the categories listing with a dropdown menu -->
                     <ul class="dropdown-menu" data-bind="foreach: categoriesList">
                         <li><a href="#" data-bind="text: title, click: $parent.setLocationList"></a></li>
                     </ul>
                 </li>
                 <li>
+                    <!-- Building the view fot the locations list -->
                     <ul data-bind="foreach: locationList">
                         <li class="sidebar-brand"><a href="#" data-bind="text: title, click: $parent.openSelectedInfoWindow"></a></li>
                     </ul>
@@ -49,11 +53,15 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
+                <!-- Togle sidebar button -->
                 <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Menu</a>
+                <!-- Placing map here -->
                 <div id="map"></div>
+
+                <!-- If the map loading fails, shows an error -->
                 <div class="onMapError">
-                    <h1>Google Maps failed to load</h1>
-                    Please, reload the page
+                    <h1>Google Maps failed to load!</h1>
+                    Please, check internet connection and reload the page
                 </div>
             </div>
         </div>
@@ -62,7 +70,7 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- Bootstrap core JavaScript -->
+    <!-- Bootstrap and jQuery core JavaScript -->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
 
@@ -72,6 +80,7 @@
     <!-- Custom JavaScript -->
     <script src="js/app.js"></script>
 
+    <!-- Google Maps Async load -->
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHcdKvfiAAMWb0ug-tOPzE6lzCvwDconc&v=3&callback=initMap" onerror="onMapError()">
     </script>

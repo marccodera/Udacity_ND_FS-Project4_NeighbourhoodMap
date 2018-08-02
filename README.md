@@ -1,6 +1,6 @@
 # Udacity FullStack Nanodegree - Project 4 Neighbourhood Map
 
-"Udacity FullStack Nanodegree - Project 4 Neighbourhood Map" is a project made at Udacity using Google Maps API, Foursquare API and developed in View-Model-ViewModel standard using KnockoutJS. It also uses jQuery and Bootstrap, created by [Marc Codera Campos].
+"Udacity FullStack Nanodegree - Project 4 Neighbourhood Map" is a project made at Udacity using Google Maps API, Foursquare API and developed in View-Model-ViewModel standard using KnockoutJS. It also uses jQuery and Bootstrap, created by Marc Codera Campos.
 
 It shows a map of Terrassa neighbourhood and the most popular venues, there's a Menu Toggle that shows a list of all the items marked in the map and this list can be filtered by categories.
 
@@ -13,16 +13,12 @@ To begin using this application, choose one of the following options to get star
 
 ## Usage
 
-### Basic Usage
-
 After downloading, simply open the index.html file in your web browser.
 
-## Troubleshooting and Help
+## Author
+Marc Codera Campos
 
-
-
-## Bugs and Issues
-
-
-## About
-
+Contact
+For information, bugs, feature requests, submit patches or other things related to this application:
+* e-mail: marc.codera@gmail.com
+* e-mail subject: [Udacity_ND_FS-Project4_NeighbourhoodMap]YourSubject
