@@ -228,6 +228,12 @@ function initMap() {
                 // Create an onClick event for each marker
                 marker.addListener('click', function() {
                     populateInfoWindow(this, infoWindow);
+                    if (marker.getAnimation() !== null) {
+                        marker.setAnimation(null);
+                    } else {
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(function(){ marker.setAnimation(null); }, 750);
+                    }
                 });
             }).bind(null, i)
         });
@@ -258,6 +264,12 @@ function openInfoWindow(markerName) {
         if (markers[i].title == markerName){
             var selectedMarker = markers[i];
             populateInfoWindow(selectedMarker, selectedMarker.infowindow);
+            if (selectedMarker.getAnimation() !== null) {
+                selectedMarker.setAnimation(null);
+            } else {
+                selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function(){ selectedMarker.setAnimation(null); }, 750);
+            }
         }
     }
 }
