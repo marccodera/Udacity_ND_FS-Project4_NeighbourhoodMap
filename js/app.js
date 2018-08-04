@@ -203,7 +203,7 @@ function initMap() {
 
             dataType: "jsonp",
 
-            error: (function(jqXHR, textStatus, errorThrown) {
+            error: (function(i, data) {
                 initialLocations[i].description = "<div class='alert alert-danger'> Error: Could not load Foursquare API due to connection errors.</div>";
             }),
 
