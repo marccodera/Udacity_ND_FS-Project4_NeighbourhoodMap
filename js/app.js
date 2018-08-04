@@ -199,8 +199,15 @@ function initMap() {
         $.ajax({
             url: "https://api.foursquare.com/v2/venues/" + initialLocations[i].FSVenueId + "/?client_id=F0MVBVM3VWYUUU1E2I1NHV2C4JXPSD5Y3ALTR2FFVTK04O2B&client_secret=VGBYLZYS12FN5UQ0JGIJKFDYSI14QDZ3I5B5F2CTHCYDAA2O&v=20180724",
 
+            type: "GET",
+
             dataType: "jsonp",
-            success: (function(i, data){
+
+            error: (function(jqXHR, textStatus, errorThrown) {
+                initialLocations[i].description = "<div class='alert alert-danger'> Error: Could not load Foursquare API due to connection errors.</div>";
+            }),
+
+            success: (function(i, data) {
                 try {
                     initialLocations[i].description = "<img src=" + data.response.venue.bestPhoto.prefix + "200x200" + data.response.venue.bestPhoto.suffix + ">";
                 }
