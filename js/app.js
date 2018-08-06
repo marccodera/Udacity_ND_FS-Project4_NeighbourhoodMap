@@ -1,3 +1,4 @@
+"use strict";
 /*** Model ***/
 /* Locations variable storing all the data from the locations to be shown */
 var initialLocations = [
@@ -308,16 +309,16 @@ function showListings(markerList) {
     // Showing again all the markers provided
     for (var i = 0; i < markerList.length; i++) {
         // The index of the markerList is the index on the markers array, and it can be showed again by setting the map
-        markers[markerList[i].index].setMap(map);
-        //markers[markerList[i].index].setVisible(true);
+        //markers[markerList[i].index].setMap(map);
+        markers[markerList[i].index].setVisible(true);
     }
 }
 
 /* This function loops through the listings and hide them all. */
 function hideListings() {
     for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-        //marker[i].setVisible(false)
+        //markers[i].setMap(null);
+        markers[i].setVisible(false);
     }
 }
 
