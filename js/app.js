@@ -99,6 +99,7 @@ var ViewModel = function() {
 var map;
 var markers = [];
 var infoWindow;
+var index;
 
 /* Building the Google Maps Map and it's properties with cusom styles, markers and infowindow.
    Using Foursquare API to show a picture of the location. There's an error handling for this
@@ -194,57 +195,79 @@ function initMap() {
     infoWindow = new google.maps.InfoWindow();
 
     /* Creating a Marker for each location in the model with Infowindow,
-       using Foursquare API */
+       calling callFoursquare Function to be able to use i variable inside for */
     for(var i = 0; i < initialLocations.length; i++) {
-        $.ajax({
-            url: "https://api.foursquare.com/v2/venues/" + initialLocations[i].FSVenueId + "/?client_id=F0MVBVM3VWYUUU1E2I1NHV2C4JXPSD5Y3ALTR2FFVTK04O2B&client_secret=VGBYLZYS12FN5UQ0JGIJKFDYSI14QDZ3I5B5F2CTHCYDAA2O&v=20180724",
-
-            type: "GET",
-
-            dataType: "jsonp",
-
-            error: (function(i, data) {
-                initialLocations[i].description = "<div class='alert alert-danger'> Error: Could not load Foursquare API due to connection errors.</div>";
-            }),
-
-            success: (function(i, data) {
-                try {
-                    initialLocations[i].description = "<img src=" + data.response.venue.bestPhoto.prefix + "200x200" + data.response.venue.bestPhoto.suffix + ">";
-                }
-                catch(err) {
-                    initialLocations[i].description = "<div class='alert alert-danger'> Error: Could not load Foursquare picture. <p> Daily limit photo requess reached. </div>";
-                }
-
-                // Creating marker with information from the model and from the instagram API
-                var marker = new google.maps.Marker({
-                    id: i,
-                    address: initialLocations[i].address,
-                    position: initialLocations[i].location,
-                    category: initialLocations[i].category,
-                    title: initialLocations[i].title,
-                    description: initialLocations[i].description,
-                    map: map,
-                    infowindow: infoWindow,
-                    animation: google.maps.Animation.DROP
-                });
-
-                // Push the created marker to the markers array and add marker's index as a property inside each location in the model
-                initialLocations[i].index = markers.push(marker) - 1;
-
-
-                // Create an onClick event for each marker
-                marker.addListener('click', function() {
-                    populateInfoWindow(this, infoWindow);
-                    if (marker.getAnimation() !== null) {
-                        marker.setAnimation(null);
-                    } else {
-                        marker.setAnimation(google.maps.Animation.BOUNCE);
-                        setTimeout(function(){ marker.setAnimation(null); }, 750);
-                    }
-                });
-            }).bind(null, i)
-        });
+        /* Calling callFoursquareAPI function passing i variable to edit description 
+           and create each marker properties on load */
+        callFoursquareAPI(i);
     }
+}
+
+function callFoursquareAPI(i) {
+    /* Calling jQUery ajax to get API GET result to json object so it can use the result to
+       populate description in each one of initialLocations */
+    $.ajax({
+        url: "https://api.foursquare.com/v2/venues/" + initialLocations[i].FSVenueId + "/?client_id=F0MVBVM3VWYUUU1E2I1NHV2C4JXPSD5Y3ALTR2FFVTK04O2B&client_secret=VGBYLZYS12FN5UQ0JGIJKFDYSI14QDZ3I5B5F2CTHCYDAA2O&v=20180724",
+
+        type: "GET",
+
+        dataType: "json",
+
+        /* If an error occurs while doing API request this is the part that will execute */
+        error: (function(jqXHR, textStatus, errorThrown) {
+            // If the error result is 4 it means that API quota has been exceeded, inform to the user using the marker
+            if (jqXHR.readyState == 4) {
+                initialLocations[i].description = "<div class='alert alert-danger'>Error: Foursquare API requests quota exceeded.</div>";
+                // Calling initialize Marker so it can be fullfilled with this description
+                initializeMarker(i);
+            // Otherwise, inform with an connection error to the Foursquare API
+            } else {
+                initialLocations[i].description = "<div class='alert alert-danger'>Error: Foursquare API not reached. <p> Please check connection with: <p> https://api.foursquare.com</div>";
+                // Calling initialize Marker so it can be fullfilled with this description
+                initializeMarker(i);
+            };
+        }),
+
+        /* If the GET request is success this part will be executed */
+        success: (function(i, data) {
+            // Populate the initialLocations description with picture URL at Foursquare
+            initialLocations[i].description = "<img src=" + data.response.venue.bestPhoto.prefix + "200x200" + data.response.venue.bestPhoto.suffix + ">";
+            // Calling initialize Marker so it can be fullfilled with this description
+            initializeMarker(i);
+            
+        }).bind(null, i)
+    });
+}
+
+/* This function initializes each marker so it can contain all the information necessary to handle them */
+function initializeMarker(i) {
+
+    var marker = new google.maps.Marker({
+            id: i,
+            address: initialLocations[i].address,
+            position: initialLocations[i].location,
+            category: initialLocations[i].category,
+            title: initialLocations[i].title,
+            description: initialLocations[i].description,
+            map: map,
+            infowindow: infoWindow,
+            animation: google.maps.Animation.DROP
+        });
+
+        // Push the created marker to the markers array and add marker's index as a property inside each location in the model
+        initialLocations[i].index = markers.push(marker) - 1;
+
+
+        // Create an onClick event for each marker
+        marker.addListener('click', function() {
+            populateInfoWindow(this, infoWindow);
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function(){ marker.setAnimation(null); }, 750);
+            }
+        });
 }
 
 /* This function populates the infowindow when the marker is clicked. We'll only allow
@@ -253,7 +276,6 @@ function initMap() {
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
-        console.log(infowindow.marker);
         infowindow.marker = marker;
         infowindow.setContent('<h3>' + marker.title + '</h3>'+ '<div>' + marker.category + '</div>' + '<div>' + marker.address + '</div>' + marker.description);
         infowindow.open(map, marker);
@@ -287,6 +309,7 @@ function showListings(markerList) {
     for (var i = 0; i < markerList.length; i++) {
         // The index of the markerList is the index on the markers array, and it can be showed again by setting the map
         markers[markerList[i].index].setMap(map);
+        //markers[markerList[i].index].setVisible(true);
     }
 }
 
@@ -294,6 +317,7 @@ function showListings(markerList) {
 function hideListings() {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
+        //marker[i].setVisible(false)
     }
 }
 
@@ -305,7 +329,7 @@ $("#menu-toggle").click(function(e) {
 
 /* Google Maps error handling, showing error message */
 function onMapError() {
-      $(".onMapError").show();
+    $(".onMapError").show();
 }
 
 /* Initializes the ViewModel  */
