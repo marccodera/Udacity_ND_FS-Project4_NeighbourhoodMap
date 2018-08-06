@@ -90,6 +90,9 @@ var ViewModel = function() {
     /* Calls the open Infowindow function from the view and passes the name of the clicked location */
     this.openSelectedInfoWindow = function(clickedLocation) {
         openInfoWindow(clickedLocation.title);
+        
+        //markers[markerList[i].index].infowindow.open();
+        //console.log(markers[markerList[i].index].infowindow);
     }
 };
 
@@ -244,31 +247,31 @@ function callFoursquareAPI(i) {
 function initializeMarker(i) {
 
     var marker = new google.maps.Marker({
-            id: i,
-            address: initialLocations[i].address,
-            position: initialLocations[i].location,
-            category: initialLocations[i].category,
-            title: initialLocations[i].title,
-            description: initialLocations[i].description,
-            map: map,
-            infowindow: infoWindow,
-            animation: google.maps.Animation.DROP
-        });
+        id: i,
+        address: initialLocations[i].address,
+        position: initialLocations[i].location,
+        category: initialLocations[i].category,
+        title: initialLocations[i].title,
+        description: initialLocations[i].description,
+        map: map,
+        infowindow: infoWindow,
+        animation: google.maps.Animation.DROP
+    });
 
-        // Push the created marker to the markers array and add marker's index as a property inside each location in the model
-        initialLocations[i].index = markers.push(marker) - 1;
+    // Push the created marker to the markers array and add marker's index as a property inside each location in the model
+    initialLocations[i].index = markers.push(marker) - 1;
 
 
-        // Create an onClick event for each marker
-        marker.addListener('click', function() {
-            populateInfoWindow(this, infoWindow);
-            if (marker.getAnimation() !== null) {
-                marker.setAnimation(null);
-            } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(function(){ marker.setAnimation(null); }, 750);
-            }
-        });
+    // Create an onClick event for each marker
+    marker.addListener('click', function() {
+        populateInfoWindow(this, infoWindow);
+        if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function(){ marker.setAnimation(null); }, 750);
+        }
+    });
 }
 
 /* This function populates the infowindow when the marker is clicked. We'll only allow
@@ -285,6 +288,8 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
         });
+    } else {
+        infowindow.open(map, marker);
     }
 }
 
@@ -308,8 +313,7 @@ function openInfoWindow(markerName) {
 function showListings(markerList) {
     // Showing again all the markers provided
     for (var i = 0; i < markerList.length; i++) {
-        // The index of the markerList is the index on the markers array, and it can be showed again by setting the map
-        //markers[markerList[i].index].setMap(map);
+        // The index of the markerList is the index on the markers array, and it can be showed again by setting the property setVisible to true
         markers[markerList[i].index].setVisible(true);
     }
 }
@@ -317,8 +321,9 @@ function showListings(markerList) {
 /* This function loops through the listings and hide them all. */
 function hideListings() {
     for (var i = 0; i < markers.length; i++) {
-        //markers[i].setMap(null);
+        // Setting the marker visibility to false
         markers[i].setVisible(false);
+        markers[i].infowindow.close();
     }
 }
 
